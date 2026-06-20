@@ -1,0 +1,7 @@
+node_modules/
+target/
+.venv/
+build/*.wtns
+*.egg-info/
+__pycache__/
+.DS_Store

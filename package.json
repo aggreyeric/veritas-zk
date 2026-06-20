@@ -1,0 +1,12 @@
+{
+  "name": "veritas-zk",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Veritas — privacy-preserving ZK credential verifier on Stellar/Soroban.",
+  "license": "MIT",
+  "dependencies": {
+    "circomlib": "^2.0.5",
+    "circomlibjs": "^0.1.7",
+    "snarkjs": "^0.7.6"
+  }
+}

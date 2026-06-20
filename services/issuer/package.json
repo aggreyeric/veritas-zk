@@ -1,0 +1,14 @@
+{
+  "name": "veritas-issuer",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Veritas off-chain issuer/attester: signs a credential claim with BabyJub EdDSA-Poseidon.",
+  "license": "MIT",
+  "main": "issue.js",
+  "scripts": {
+    "issue": "node issue.js"
+  },
+  "dependencies": {
+    "circomlibjs": "^0.1.7"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "name": "veritas-prover",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Veritas off-chain prover: witness + Groth16 proof + on-chain byte encoding.",
+  "license": "MIT",
+  "main": "prove.js",
+  "scripts": {
+    "prove": "node prove.js"
+  }
+}
