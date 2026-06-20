@@ -9,7 +9,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Stellar](https://img.shields.io/badge/Stellar-Soroban-7d65ff)](https://developers.stellar.org/docs/smart-contracts)
 [![ZK](https://img.shields.io/badge/ZK-Groth16%20%2F%20BN254-blue)](https://docs.circom.io)
-[![Tests](https://img.shields.io/badge/tests-6%20passing-brightgreen)](soroban/verifier)
+[![Tests](https://img.shields.io/badge/tests-6%20passing-brightgreen)](soroban/contracts/veritas-verifier)
 
 **Hackathon:** Stellar Hacks: Real-World ZK · **Stack:** Circom + snarkjs + Rust/Soroban + Node
 
@@ -82,7 +82,7 @@ no proof can ever exist.
 
 ---
 
-## The on-chain verifier (`soroban/verifier/`)
+## The on-chain verifier (`soroban/contracts/veritas-verifier/`)
 
 A Rust Soroban contract that performs the full **Groth16 BN254 pairing check inside WASM** (Stellar
 has no BN254 precompile, so the verifier implements the miller-loop / final-exponentiation in the
@@ -165,7 +165,7 @@ AgeGte proof bytes — the same bytes the sandbox test verifies — returning `t
 ## Tests
 
 ```bash
-cd soroban/verifier && cargo test
+cd soroban/contracts/veritas-verifier && cargo test
 ```
 - `tests/verify_real.rs` — verifies REAL snarkjs proofs with the pairing core; rejects a tampered
   threshold and a cross-circuit proof.
@@ -182,10 +182,11 @@ All **6 tests pass**.
 ```
 circuits/        Circom sources (AgeGte, ValidOwner, JurisdictionAllowed, CredentialAge)
                  + circomlib deps, ptau, build artifacts, circuit tests
-soroban/verifier/  Rust Soroban contract: groth16 core + circuit spec + contract + tests
+soroban/contracts/veritas-verifier/  Rust Soroban contract: groth16 core + circuit spec + contract + tests
 services/issuer/   Off-chain issuer/attester (BabyJub EdDSA-Poseidon signing)
 services/prover/   Off-chain prover (witness + Groth16 proof + byte encoding)
 scripts/         gen inputs · verify_all · proof_to_bytes · demo.sh · deploy_testnet.sh
+python/          Alternative Python toolchain: issuer / witness / proof / verify + demo.sh
 Dockerfile       reproducible environment (circom + snarkjs + rust + stellar)
 ```
 

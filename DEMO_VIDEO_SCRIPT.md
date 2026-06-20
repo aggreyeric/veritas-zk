@@ -132,7 +132,7 @@ the private inputs: `dob`, `country`, `signature`, `salt`.)*
 **On screen:** Cut to the Rust contract:
 
 ```bash
-cat soroban/verifier/src/contract.rs
+cat soroban/contracts/veritas-verifier/src/contract.rs
 ```
 
 *(Show the `verify_credential` / `claim_faucet` entry points and the on-chain
@@ -168,7 +168,7 @@ if you pre-ran it.)*
 > exposure, private payments, and confidential tokens. The predicate is public.
 > The person stays private."
 
-**End card:** repo URL · `bash scripts/demo.sh` · `cd soroban/verifier && cargo test`
+**End card:** repo URL · `bash scripts/demo.sh` · `cd soroban/contracts/veritas-verifier && cargo test`
 
 ---
 
@@ -179,7 +179,7 @@ if you pre-ran it.)*
 | 1 | Intro | — | Title card + architecture diagram | 30s |
 | 2 | Demo flow | Terminal | `bash python/demo.sh` (issuer → witness → proof → verify) | 65s |
 | 3 | Circom circuit | Code viewer | `cat circuits/CredentialAge.circom` | 25s |
-| 4 | Soroban contract | Code viewer | `cat soroban/verifier/src/contract.rs` (+ highlight pairing) | 30s |
+| 4 | Soroban contract | Code viewer | `cat soroban/contracts/veritas-verifier/src/contract.rs` (+ highlight pairing) | 30s |
 | 5 | Closing | — | End card | 30s |
 
 **If you need to save 20s:** trim the tampered-credential/replay beat inside

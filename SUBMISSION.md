@@ -113,7 +113,7 @@ hidden.
 | Path | What |
 |---|---|
 | `circuits/` | Circom circuits + circomlib, ptau, build artifacts, tests |
-| `soroban/verifier/` | Rust Soroban Groth16 verifier (BN254 pairing in WASM) + tests |
+| `soroban/contracts/veritas-verifier/` | Rust Soroban Groth16 verifier (BN254 pairing in WASM) + tests |
 | `services/{issuer,prover}/` | Off-chain issuer signing + prover |
 | `scripts/` | demo.sh, deploy_testnet.sh, proof_to_bytes.js, verify_all.sh |
 | `Dockerfile` | Reproducible build env |
