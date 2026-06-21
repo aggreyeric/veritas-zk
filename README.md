@@ -211,5 +211,10 @@ No private keys or API keys are committed. Demo issuer keys are generated in-rep
 `DO NOT USE IN PROD`. The repo does **not** submit to any hackathon portal and touches **no** mainnet
 funds.
 
+## 📸 Screenshots
+| Demo output | Architecture flow |
+|---|---|
+| ![demo](docs/demo-output.png) | ![arch](docs/architecture.png) |
+
 ## License
 [MIT](LICENSE). Built for the Stellar Hacks: Real-World ZK hackathon.
