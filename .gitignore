@@ -5,6 +5,7 @@ node_modules/
 target/
 **/*.wasm
 .wasm/
+.soroban/
 
 # ZK build artifacts (regenerable from circuits/ + ptau via scripts/build_circuit.sh)
 *.r1cs
