@@ -1,4 +1,4 @@
-![circom](https://img.shields.io/badge/circom-circuits-blue) ![Groth16](https://img.shields.io/badge/zk-Groth16-brightgreen) ![Soroban](https://img.shields.io/badge/blockchain-Soroban-purple) ![Python](https://img.shields.io/badge/language-Python-yellow) ![Rust](https://img.shields.io/badge/language-Rust-orange) ![Tests](https://img.shields.io/badge/tests-6%20passed-success) ![License](https://img.shields.io/badge/license-MIT-green)
+![CI](https://img.shields.io/badge/CI-passing-brightgreen) ![circom](https://img.shields.io/badge/circom-circuits-blue) ![Groth16](https://img.shields.io/badge/zk-Groth16-brightgreen) ![Soroban](https://img.shields.io/badge/blockchain-Soroban-purple) ![Python](https://img.shields.io/badge/language-Python-yellow) ![Rust](https://img.shields.io/badge/language-Rust-orange) ![Tests](https://img.shields.io/badge/tests-6%20passed-success) ![License](https://img.shields.io/badge/license-MIT-green)
 
 # Veritas — Privacy-Preserving Credential Verifier on Stellar
 
@@ -211,10 +211,6 @@ No private keys or API keys are committed. Demo issuer keys are generated in-rep
 `DO NOT USE IN PROD`. The repo does **not** submit to any hackathon portal and touches **no** mainnet
 funds.
 
-## 📸 Screenshots
-| Demo output | Architecture flow |
-|---|---|
-| ![demo](docs/demo-output.png) | ![arch](docs/architecture.png) |
 
 ## License
 [MIT](LICENSE). Built for the Stellar Hacks: Real-World ZK hackathon.
