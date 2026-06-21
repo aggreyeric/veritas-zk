@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Veritas ZK — Zero-Knowledge Credential Verifier</title>
+<style>
+  :root {
+    --bg: #0a0a1a;
+    --bg-soft: #12122a;
+    --bg-card: #15152e;
+    --border: #26264a;
+    --text: #e6e6f5;
+    --muted: #9b9bc7;
+    --accent: #7d65ff;     /* Soroban purple */
+    --accent2: #38e8a0;    /* ZK green */
+    --accent3: #4aa3ff;    /* circuit blue */
+    --warn: #ffb454;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  body {
+    background:
+      radial-gradient(1200px 600px at 80% -10%, rgba(125,101,255,0.18), transparent 60%),
+      radial-gradient(900px 500px at 0% 10%, rgba(56,232,160,0.10), transparent 55%),
+      var(--bg);
+    min-height: 100vh;
+  }
+  .wrap {
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: 56px 28px 80px;
+  }
+
+  /* Hero */
+  .hero { text-align: center; margin-bottom: 14px; }
+  .badge-hack {
+    display: inline-block;
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent2);
+    border: 1px solid rgba(56,232,160,0.35);
+    background: rgba(56,232,160,0.07);
+    border-radius: 999px;
+    padding: 5px 14px;
+    margin-bottom: 22px;
+  }
+  h1 {
+    font-size: clamp(30px, 5vw, 52px);
+    line-height: 1.08;
+    margin: 0 0 16px;
+    background: linear-gradient(90deg, #fff 0%, #b9b3ff 55%, #7d65ff 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -0.02em;
+  }
+  .tagline {
+    color: var(--muted);
+    font-size: clamp(15px, 2vw, 19px);
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  /* Tech badges */
+  .stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin: 28px 0 8px;
+  }
+  .pill {
+    font-size: 13px;
+    font-weight: 600;
+    padding: 7px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--bg-soft);
+    color: var(--text);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+  .c-circom { background: var(--accent3); }
+  .c-groth  { background: var(--accent2); }
+  .c-soroban{ background: var(--accent); }
+  .c-stellar{ background: #ffb454; }
+
+  /* Flow diagram */
+  .section-title {
+    text-align: center;
+    font-size: 13px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 46px 0 18px;
+  }
+  .flow {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr auto 1fr;
+    gap: 12px;
+    align-items: stretch;
+    margin-bottom: 26px;
+  }
+  .step {
+    background: linear-gradient(180deg, var(--bg-card) 0%, var(--bg-soft) 100%);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 22px 18px;
+    position: relative;
+    overflow: hidden;
+  }
+  .step::before {
+    content: "";
+    position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: var(--accent);
+  }
+  .step.s2::before { background: var(--accent2); }
+  .step.s3::before { background: var(--warn); }
+  .step .num {
+    font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 8px;
+  }
+  .step h3 { margin: 0 0 8px; font-size: 18px; }
+  .step p  { margin: 0; color: var(--muted); font-size: 14px; }
+  .arrow {
+    align-self: center;
+    color: var(--accent);
+    font-size: 22px;
+    font-weight: 700;
+  }
+
+  /* ASCII diagram card */
+  .diagram-card {
+    background: #060614;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    margin: 18px 0 40px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.45);
+  }
+  .diagram-head {
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px 16px;
+    background: var(--bg-soft);
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 0.06em;
+  }
+  .traffic { display: flex; gap: 6px; }
+  .traffic span { width: 11px; height: 11px; border-radius: 50%; display: inline-block; }
+  .t-r { background: #ff5f57; } .t-y { background: #febc2e; } .t-g { background: #28c840; }
+  .diagram-card pre {
+    margin: 0;
+    padding: 22px 20px;
+    overflow-x: auto;
+    font-family: "SF Mono", "Fira Code", "JetBrains Mono", Menlo, Consolas, monospace;
+    font-size: 12.5px;
+    line-height: 1.5;
+    color: #c9d1ff;
+  }
+
+  /* Description grid */
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    margin: 10px 0 36px;
+  }
+  @media (max-width: 760px) {
+    .grid { grid-template-columns: 1fr; }
+    .flow { grid-template-columns: 1fr; }
+    .arrow { transform: rotate(90deg); justify-self: center; }
+  }
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 22px 22px;
+  }
+  .card h3 { margin: 0 0 10px; font-size: 17px; color: #fff; }
+  .card p, .card li { color: var(--muted); font-size: 14.5px; }
+  .card ul { margin: 8px 0 0; padding-left: 18px; }
+  .card li { margin-bottom: 6px; }
+
+  .circuits {
+    margin: 10px 0 36px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 22px;
+  }
+  .circuits h3 { margin: 0 0 14px; font-size: 17px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); }
+  th { color: var(--muted); font-weight: 600; font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; }
+  td { color: var(--text); }
+  td:first-child { color: var(--accent2); font-family: "SF Mono", Menlo, monospace; font-weight: 600; }
+  tr:last-child td { border-bottom: none; }
+
+  /* Footer / CTA */
+  .footer {
+    text-align: center;
+    border-top: 1px solid var(--border);
+    padding-top: 30px;
+    margin-top: 20px;
+  }
+  .cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--accent);
+    color: #fff;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 15px;
+    padding: 13px 26px;
+    border-radius: 10px;
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
+    box-shadow: 0 8px 24px rgba(125,101,255,0.35);
+  }
+  .cta:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(125,101,255,0.45); }
+  .meta { margin-top: 18px; color: var(--muted); font-size: 13px; }
+  .meta a { color: var(--accent3); text-decoration: none; }
+</style>
+</head>
+<body>
+  <div class="wrap">
+
+    <!-- HERO -->
+    <div class="hero">
+      <span class="badge-hack">Stellar Hacks · Real-World ZK</span>
+      <h1>Veritas ZK — Zero-Knowledge Credential Verifier</h1>
+      <p class="tagline">
+        Prove you're compliant — "I'm 18+", "my country is allowed", "this credential is valid &amp; mine" —
+        without revealing the underlying document. A Groth16 proof of a <em>derived predicate</em>,
+        verified on-chain by a Soroban contract via a real BN254 pairing.
+      </p>
+
+      <div class="stack">
+        <span class="pill"><span class="dot c-circom"></span>Circom</span>
+        <span class="pill"><span class="dot c-groth"></span>Groth16 / BN254</span>
+        <span class="pill"><span class="dot c-soroban"></span>Soroban</span>
+        <span class="pill"><span class="dot c-stellar"></span>Stellar</span>
+      </div>
+    </div>
+
+    <!-- 3-STEP FLOW -->
+    <div class="section-title">The ZK Proof Flow</div>
+    <div class="flow">
+      <div class="step s1">
+        <div class="num">Step 1</div>
+        <h3>Issuer Signs</h3>
+        <p>A trusted attester (KYC, government…) signs a credential claim with a
+           BabyJub EdDSA-Poseidon signature and publishes its public key on-chain.</p>
+      </div>
+      <div class="arrow">→</div>
+      <div class="step s2">
+        <div class="num">Step 2</div>
+        <h3>Holder Proves</h3>
+        <p>The user runs the off-chain prover (circom + snarkjs) and emits a Groth16
+           proof of a <em>derived predicate</em> — DOB, country &amp; identity stay private.</p>
+      </div>
+      <div class="arrow">→</div>
+      <div class="step s3">
+        <div class="num">Step 3</div>
+        <h3>Chain Verifies</h3>
+        <p>The Soroban contract runs the BN254 pairing check in WASM, binds issuer +
+           Merkle root, records a nullifier, and unlocks the compliant action.</p>
+      </div>
+    </div>
+
+    <!-- ASCII DIAGRAM -->
+    <div class="diagram-card">
+      <div class="diagram-head">
+        <span class="traffic"><span class="t-r"></span><span class="t-y"></span><span class="t-g"></span></span>
+        <span>architecture.flow</span>
+      </div>
+<pre>
+                       (1) signs credential claim
+   +---------+   ---------------------------------->   +---------+
+   | ISSUER  |   BabyJub EdDSA-Poseidon signature     | HOLDER  |
+   | (KYC..) |   <---------------------------------   | (user)  |
+   +---------+        public key (Ax, Ay) published   +---------+
+        |                                                 |  (2) derives predicate
+        |                                  +---------------+
+        |                                  v               |
+        |                          +----------+   private: DOB, country,
+        |                          |  PROVER  |   signature, salt, secret
+        |  public key on-chain     | off-chain| <-------------------------+
+        |   +----------------+     | circom + |   (3) proof + public inputs only
+        |   | allow-set root |     | snarkjs  |          |
+        |   |  (sanctions)   |     +----+-----+          v
+        |   +-------+--------+          |        +---------------------------------+
+        |           |                   v        | SOROBAN VERIFIER CONTRACT        |
+        v           v        +--------------------+  * BN254 Groth16 pairing (WASM) |
+   +---------------------+   | verify(proof,pub) -> bool                            |
+   | set_issuer / root   |-->|  * issuer + Merkle-root binding                      |
+   | (admin config)      |   |  * nullifier set (double-spend)                      |
+   +---------------------+   |  * claim_faucet() gated action                       |
+                             +----------------------+------------------------------+
+                                                     |  (4) true -> action unlocks
+                                                     v
+                                        compliant transfer / age-gated faucet
+</pre>
+    </div>
+
+    <!-- DESCRIPTION GRID -->
+    <div class="section-title">Why This Wins</div>
+    <div class="grid">
+      <div class="card">
+        <h3>The angle</h3>
+        <p>Compliance / KYC is the <strong>#1 real-world barrier</strong> to on-chain payments.
+           Today, proving you're allowed to transact means uploading a passport to a centralized
+           oracle. Veritas replaces that with <strong>cryptographic proof of a derived predicate</strong>:
+           the verifier learns <em>only</em> that the predicate holds — never the underlying attribute.</p>
+      </div>
+      <div class="card">
+        <h3>What makes it special</h3>
+        <ul>
+          <li>One design lands three use-cases: identity verification, private payments,
+              confidential tokens.</li>
+          <li>The clearest demo-able ZK story — a binary <strong>allow / deny</strong> outcome.</li>
+          <li>Real BN254 pairing executed on-chain in ~73 KB of WASM (no native precompile on Stellar).</li>
+          <li>The same pairing core is unit-tested against real snarkjs proofs.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- CIRCUITS TABLE -->
+    <div class="circuits">
+      <h3>Circuits</h3>
+      <table>
+        <thead>
+          <tr><th>Circuit</th><th>Proves (without revealing)</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>AgeGte</td><td>age ≥ threshold, from a private DOB</td></tr>
+          <tr><td>ValidOwner</td><td>a credential was issuer-signed &amp; owned (emits double-spend nullifier)</td></tr>
+          <tr><td>JurisdictionAllowed</td><td>country ∈ allow-set (Poseidon Merkle membership)</td></tr>
+          <tr><td>CredentialAge *</td><td>issuer-signed credential whose private age ≥ threshold — combines all of the above</td></tr>
+        </tbody>
+      </table>
+      <p style="margin:14px 0 0;color:var(--muted);font-size:13px;">
+        Primitives: <strong>Poseidon</strong> hash · <strong>EdDSA over BabyJubJub</strong> ·
+        <strong>Groth16</strong> on BN254 — all from iden3/circomlib. An invalid predicate makes the
+        circuit unsatisfiable: no proof can ever exist.
+      </p>
+    </div>
+
+    <!-- FOOTER / CTA -->
+    <div class="footer">
+      <a class="cta" href="https://github.com/aggreyeric/veritas-zk" target="_blank" rel="noopener">
+        ★ View on GitHub →
+      </a>
+      <div class="meta">
+        <strong>Veritas ZK</strong> · Privacy-Preserving Credential Verifier on Stellar / Soroban<br/>
+        Built for Stellar Hacks: Real-World ZK · MIT License<br/>
+        <a href="https://github.com/aggreyeric/veritas-zk">github.com/aggreyeric/veritas-zk</a>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>
