@@ -1,0 +1,81 @@
+﻿
+  ╔════════════════════════════════════════════════════════════════════════════════════════╗
+  ║                          VERITAS  —  ZK Credential Verifier                             ║
+  ║            Privacy-Preserving Compliance Layer for Stellar / Soroban                    ║
+  ║            Stack:  Circom  ·  snarkjs  ·  Groth16/BN254  ·  Rust/Soroban                 ║
+  ╚════════════════════════════════════════════════════════════════════════════════════════╝
+
+  ┌──────────────┐       (1) signed credential claim        ┌──────────────┐
+  │   ISSUER     │   ─────────────────────────────────────► │   HOLDER     │
+  │  (KYC / GOV) │      BabyJub EdDSA-Poseidon signature    │   (user)     │
+  │              │   ◄───────────────────────────────────── │              │
+  │  pub key     │          public key (Ax, Ay)             │  derives     │
+  │  (Ax, Ay)    │                                          │  predicate   │
+  └──────┬───────┘                                          └──────┬───────┘
+         │                                                         │  (2) private:
+         │  issuer pubkey + allow-set                              │      DOB, country,
+         │  Merkle root posted on-chain                            │      signature, salt
+         │                                                         ▼
+         │                                            ┌──────────────────────────┐
+         │                                            │       PROVER (off-chain) │
+         │                                            │   circom + snarkjs       │
+         │                                            │                          │
+         │                                            │   witness ─► Groth16     │
+         │                                            │              proof       │
+         │                                            └─────────────┬────────────┘
+         │                                                          │
+         │                            ┌─────────────────────────────┼──────────┐
+         │                            │                             │          │
+         │                            ▼                             ▼          ▼
+         │   ┌───────────────────────────────────────────────────────────────────────┐
+         │   │                        CIRCUITS  (circom / circomlib)                   │
+         │   │                                                                           │
+         │   │   ┌──────────────┐   ┌───────────────────────┐   ┌──────────────────┐  │
+         │   │   │   AgeGte     │   │  JurisdictionAllowed  │   │   ValidOwner     │  │
+         │   │   │--------------│   │-----------------------│   │------------------│  │
+         │   │   │ age ≥ thr    │   │ country ∈ allow-set   │   │ issuer-signed &  │  │
+         │   │   │ from private │   │ Poseidon Merkle       │   │ owned credential │  │
+         │   │   │ DOB          │   │ membership            │   │ + nullifier emit │  │
+         │   │   └──────┬───────┘   └──────────┬────────────┘   └────────┬─────────┘  │
+         │   │          └────────────┬─────────┘                        │            │
+         │   │                  (flagship) CredentialAge ◄──────────────┘            │
+         │   │                  combines all three above                              │
+         │   │                                                                           │
+         │   │   primitives:  Poseidon hash · EdDSA / BabyJubJub · Groth16 / BN254     │
+         │   └───────────────────────────────────────────────────────────────────────┘
+         │                                                          │
+         │                                            (3) proof + public inputs ONLY
+         │                                            (DOB, country, name NEVER revealed)
+         │                                                          │
+         ▼                                                          ▼
+  ┌──────────────────────────────────────────────────────────────────────────────────────┐
+  │                    SOROBAN VERIFIER CONTRACT   (Rust → ~73 KB wasm)                   │
+  │                                                                                      │
+  │   ┌────────────────────────────────────────┐    ┌─────────────────────────────────┐  │
+  │   │  Groth16 BN254 pairing (in-WASM)       │    │  Policy binding                  │  │
+  │   │  • miller loop + final exponentiation  │    │  • issuer pubkey (Ax,Ay) match   │  │
+  │   │  • ark-bn254                           │    │  • allow-set Merkle root match   │  │
+  │   │  • verify(proof, public) -> bool       │    └─────────────────────────────────┘  │
+  │   └────────────────────────────────────────┘                                         │
+  │   ┌────────────────────────────────────────┐    ┌─────────────────────────────────┐  │
+  │   │  Nullifier set (double-spend guard)    │    │  Gated action                   │  │
+  │   │  replay → rejected                     │    │  claim_faucet() → transfer      │  │
+  │   └────────────────────────────────────────┘    └─────────────────────────────────┘  │
+  └──────────────────────────────────────────────────────────────────────────────────────┘
+                                                          │  (4) proof == true → unlock
+                                                          ▼
+                                          ┌──────────────────────────────────────┐
+                                          │   compliant transfer / age-gated      │
+                                          │   faucet  (Stellar Testnet)           │
+                                          └──────────────────────────────────────┘
+
+  ── PRIVACY GUARANTEE ───────────────────────────────────────────────────────────────────
+    The verifier learns ONLY that the predicate holds.  DOB · country · name · document
+    signature · salt  are all private witness inputs and never appear in public inputs.
+    An invalid predicate (underage · wrong country · forged sig) makes the circuit
+    UNSATISFIABLE  →  no valid Groth16 proof can ever exist.
+
+  ── LAYERS ──────────────────────────────────────────────────────────────────────────────
+    [ off-chain ]   Issuer signing  ·  Holder prover (circom + snarkjs)
+    [ on-chain  ]   Soroban verifier:  BN254 pairing + issuer/root binding + nullifier + gate
+    [ circuits  ]   AgeGte · JurisdictionAllowed · ValidOwner · CredentialAge (flagship)
