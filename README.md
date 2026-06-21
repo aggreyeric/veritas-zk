@@ -1,10 +1,12 @@
+![circom](https://img.shields.io/badge/circom-circuits-blue) ![Groth16](https://img.shields.io/badge/zk-Groth16-brightgreen) ![Soroban](https://img.shields.io/badge/blockchain-Soroban-purple) ![Python](https://img.shields.io/badge/language-Python-yellow) ![Rust](https://img.shields.io/badge/language-Rust-orange) ![License](https://img.shields.io/badge/license-MIT-green)
+
 # Veritas — Privacy-Preserving Credential Verifier on Stellar
 
-> Prove you're compliant **without** revealing the document. A ZK credential-compliance
-> layer for Soroban: a holder generates a Groth16 proof of a *derived predicate*
-> ("I'm 18+", "my country is allowed", "this credential is valid & mine"), and a
-> Soroban contract verifies it **on-chain** via a real BN254 pairing — gating a
-> compliant action while the underlying DOB, country, and identity stay private.
+> **A ZK credential-compliance layer for Stellar / Soroban.** Prove you're compliant
+> ("I'm 18+", "my country is allowed", "this credential is valid & mine") **without**
+> revealing the underlying document. A holder generates a Groth16 proof of a *derived
+> predicate* and a Soroban contract verifies it **on-chain** via a real BN254 pairing —
+> gating a compliant action while DOB, country, and identity stay private.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Stellar](https://img.shields.io/badge/Stellar-Soroban-7d65ff)](https://developers.stellar.org/docs/smart-contracts)

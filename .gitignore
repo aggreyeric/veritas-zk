@@ -1,7 +1,20 @@
+# Node
 node_modules/
+
+# Rust / Soroban build artifacts
 target/
+**/*.wasm
+.wasm/
+
+# ZK build artifacts (regenerable from circuits/ + ptau via scripts/build_circuit.sh)
+*.r1cs
+*.wtns
+*.ptau
+
+# Python
 .venv/
-build/*.wtns
 *.egg-info/
 __pycache__/
+
+# OS / editor
 .DS_Store
