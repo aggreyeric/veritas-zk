@@ -11,6 +11,11 @@ target/
 *.r1cs
 *.wtns
 *.ptau
+*.sym
+*.wasm
+*.zkey
+circuits/build/
+ptau/
 
 # Python
 .venv/
