@@ -214,3 +214,7 @@ funds.
 
 ## License
 [MIT](LICENSE). Built for the Stellar Hacks: Real-World ZK hackathon.
+
+## 🤖 AI Assistants
+
+→ See [CLAUDE.md](./CLAUDE.md) for AI coding assistant context.
