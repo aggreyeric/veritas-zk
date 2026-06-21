@@ -1,4 +1,4 @@
-![circom](https://img.shields.io/badge/circom-circuits-blue) ![Groth16](https://img.shields.io/badge/zk-Groth16-brightgreen) ![Soroban](https://img.shields.io/badge/blockchain-Soroban-purple) ![Python](https://img.shields.io/badge/language-Python-yellow) ![Rust](https://img.shields.io/badge/language-Rust-orange) ![License](https://img.shields.io/badge/license-MIT-green)
+![circom](https://img.shields.io/badge/circom-circuits-blue) ![Groth16](https://img.shields.io/badge/zk-Groth16-brightgreen) ![Soroban](https://img.shields.io/badge/blockchain-Soroban-purple) ![Python](https://img.shields.io/badge/language-Python-yellow) ![Rust](https://img.shields.io/badge/language-Rust-orange) ![Tests](https://img.shields.io/badge/tests-6%20passed-success) ![License](https://img.shields.io/badge/license-MIT-green)
 
 # Veritas — Privacy-Preserving Credential Verifier on Stellar
 
