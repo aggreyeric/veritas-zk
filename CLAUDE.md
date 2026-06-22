@@ -103,6 +103,7 @@ python/                alternate Python toolchain (issuer/witness/proof/verify/d
   ~73 KB of WASM. Gas cost on testnet is real and non-trivial; keep that in mind when iterating.
 - **No secrets, no mainnet.** No private keys or API keys are committed. The repo touches **no**
   mainnet funds and does **not** submit to any hackathon portal.
+- **DoraHacks submission ready: DORAHACKS_SUBMISSION.md**
 - **Before reporting "done":** run `cd soroban/contracts/veritas-verifier && cargo test` — all 6
   tests (`verify_real.rs` + `sandbox.rs`) must pass. `bash scripts/demo.sh` is the canonical
   end-to-end smoke test.
