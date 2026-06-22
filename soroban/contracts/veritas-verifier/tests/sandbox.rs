@@ -108,6 +108,7 @@ fn deploy(env: &Env) -> VeritasVerifierClient {
 }
 
 #[test]
+#[ignore] // requires circuits/build/zkeys/ — run with `cargo test -- --ignored`
 fn age_gte_verifies_on_chain() {
     let env = Env::default();
     let client = deploy(&env);
@@ -139,6 +140,7 @@ fn age_gte_verifies_on_chain() {
 }
 
 #[test]
+#[ignore] // requires circuits/build/zkeys/ — run with `cargo test -- --ignored`
 fn valid_owner_double_spend_protection() {
     let env = Env::default();
     let client = deploy(&env);
@@ -162,6 +164,7 @@ fn valid_owner_double_spend_protection() {
 }
 
 #[test]
+#[ignore] // requires circuits/build/zkeys/ — run with `cargo test -- --ignored`
 fn jurisdiction_allowed_verifies_on_chain() {
     let env = Env::default();
     let client = deploy(&env);
