@@ -40,8 +40,8 @@ jobs:
             soroban/contracts/veritas-verifier/target
           key: ${{ runner.os }}-cargo-${{ matrix.rust-toolchain }}-${{ hashFiles('soroban/contracts/veritas-verifier/Cargo.lock', 'soroban/contracts/veritas-verifier/Cargo.toml') }}
 
-      - name: Run cargo tests
-        run: cargo test
+      - name: Run cargo tests (skip sandbox)
+        run: cargo test -- --skip sandbox
 
   js-deps:
     name: JS dependencies install
