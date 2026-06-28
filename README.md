@@ -164,6 +164,12 @@ node services/issuer/issue.js 23 18      # issuer signs a "age=23" credential
 node services/prover/prove.js ValidOwner # witness + Groth16 proof + on-chain bytes
 ```
 
+### Testing
+```bash
+# Run tests (7 tests: 1 active + 6 require build artifacts)
+cd soroban/contracts/veritas-verifier && cargo test
+```
+
 ---
 
 ## Deploy to Stellar Testnet
