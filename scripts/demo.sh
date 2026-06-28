@@ -26,7 +26,10 @@ ok "node $(node -v), circom $(circom --version | awk '{print $3}'), snarkjs pres
 
 # ---- 1. circuit deps + sample credential inputs ------------------------------
 c "installing circomlib + generating sample signed-credential inputs"
-( cd circuits && npm install --silent --no-audit --no-fund >/dev/null 2>&1 || npm install --no-audit --no-fund >/dev/null )
+# Root deps: circomlibjs + snarkjs (required by scripts/gen_test_inputs.js & friends).
+# Circuits deps: circomlib (required as a link library by `circom -l circuits/node_modules`).
+npm install --silent --no-audit --no-fund >/dev/null 2>&1 || npm install --no-audit --no-fund >/dev/null
+( cd circuits && npm install --no-audit --no-fund >/dev/null 2>&1 || true )
 node scripts/gen_test_inputs.js >/dev/null
 ok "issuer signed demo credentials (AgeGte, ValidOwner, JurisdictionAllowed)"
 
@@ -34,7 +37,7 @@ ok "issuer signed demo credentials (AgeGte, ValidOwner, JurisdictionAllowed)"
 c "compiling circom circuits (R1CS + witness wasm)"
 for C in AgeGte ValidOwner JurisdictionAllowed; do
   if [ ! -f "circuits/build/$C.r1cs" ] || [ ! -d "circuits/build/${C}_js" ]; then
-    circom "circuits/$C.circom" -l circuits/node_modules -r1cs -wasm \
+    circom "circuits/$C.circom" -l circuits/node_modules --r1cs --wasm \
       -o circuits/build >/dev/null 2>&1
   fi
 done

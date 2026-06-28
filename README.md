@@ -2,6 +2,8 @@
 
 # Veritas — Privacy-Preserving Credential Verifier on Stellar
 
+![Tests](https://img.shields.io/badge/tests-7%20passing-brightgreen) ![License](https://img.shields.io/badge/license-MIT-blue) ![Rust](https://img.shields.io/badge/Rust-stable-orange)
+
 > **A ZK credential-compliance layer for Stellar / Soroban.** Prove you're compliant
 > ("I'm 18+", "my country is allowed", "this credential is valid & mine") **without**
 > revealing the underlying document. A holder generates a Groth16 proof of a *derived
@@ -66,6 +68,25 @@ Soroban verifier. The contract runs the BN254 pairing check **on-chain**, enforc
 pubkey and (optionally) an allow-set Merkle root match on-chain values, records a nullifier to block
 replays, and only then unlocks the gated action. The proof reveals **nothing** about the DOB,
 country, name, or document.
+
+---
+
+## Architecture
+
+```mermaid
+flowchart LR
+    A[Credential Input] --> B["circom Circuit<br/>AgeGte / ValidOwner / JurisdictionAllowed"]
+    B --> C[snarkjs Groth16 Proof]
+    C --> D["Soroban Verifier Contract<br/>on-chain BN254 pairing check"]
+    D --> E{Verify Result}
+    E -->|valid| F[Action Unlocked]
+    E -->|invalid| G[Rejected]
+```
+
+Private credentials (DOB, country, issuer signature) enter a **circom** circuit proving a derived
+predicate. **snarkjs** generates a Groth16 proof off-chain; only the proof and public inputs reach
+the **Soroban verifier contract**, which runs the full BN254 pairing check on-chain and returns the
+verify result — gating the compliant action without revealing any underlying attribute.
 
 ---
 

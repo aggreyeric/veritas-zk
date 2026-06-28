@@ -96,6 +96,7 @@ fn load(circuit: &str) -> (VerifyingKey, Vec<Fr>, Proof) {
 }
 
 #[test]
+#[ignore = "requires circuits/build/zkeys/ artifacts (run ./scripts/demo.sh to generate)"]
 fn verifies_all_real_proofs() {
     for circuit in ["AgeGte", "ValidOwner", "JurisdictionAllowed"] {
         let (vk, public, proof) = load(circuit);
@@ -107,6 +108,7 @@ fn verifies_all_real_proofs() {
 }
 
 #[test]
+#[ignore = "requires circuits/build/zkeys/ artifacts (run ./scripts/demo.sh to generate)"]
 fn rejects_tampered_public_input() {
     // AgeGte: flip `threshold` (index 5) — a correct proof bound to threshold=18
     // must NOT verify against a tampered threshold (e.g. 21).
@@ -117,6 +119,7 @@ fn rejects_tampered_public_input() {
 }
 
 #[test]
+#[ignore = "requires circuits/build/zkeys/ artifacts (run ./scripts/demo.sh to generate)"]
 fn rejects_cross_circuit_proof() {
     // A ValidOwner proof must not verify under the AgeGte key (different vkey).
     let (vk_age, _, _) = load("AgeGte");
